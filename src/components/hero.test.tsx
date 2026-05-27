@@ -31,14 +31,14 @@ describe('<Hero />', () => {
     expect(screen.getByRole('region', { name: product.name })).toBeInTheDocument();
   });
 
-  it('renders the hero image with descriptive alt text', () => {
+  it('renders the lead product image with descriptive alt text', () => {
     render(<Hero />);
-    expect(screen.getByAltText(product.heroImageAlt)).toBeInTheDocument();
+    expect(screen.getByAltText(product.images[0].alt)).toBeInTheDocument();
   });
 
-  it('marks the hero image as high fetch priority for LCP', () => {
+  it('marks the lead image as high fetch priority for LCP', () => {
     render(<Hero />);
-    const img = screen.getByAltText(product.heroImageAlt);
+    const img = screen.getByAltText(product.images[0].alt);
     expect(img).toHaveAttribute('fetchpriority', 'high');
     expect(img).toHaveAttribute('width');
     expect(img).toHaveAttribute('height');
