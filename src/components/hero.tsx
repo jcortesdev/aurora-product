@@ -1,15 +1,29 @@
 import { Button } from '@/components/button';
+import { ColorSwatch } from '@/components/color-swatch';
 import { Gallery } from '@/components/gallery';
 import { formatPrice } from '@/lib/format-price';
-import { product } from '@/lib/product-data';
+import { type ColorId, product } from '@/lib/product-data';
+import { useSearchParam } from '@/lib/use-search-param';
+
+function resolveColor(paramValue: string | null) {
+  const candidate = product.colors.find((color) => color.id === paramValue && color.inStock);
+  if (candidate) return candidate;
+  const fallback = product.colors.find((color) => color.id === product.defaultColorId);
+  // defaultColorId is typed as ColorId and must exist in colors[]; product-data is the source of truth.
+  if (!fallback) throw new Error(`Default color "${product.defaultColorId}" not found in colors`);
+  return fallback;
+}
 
 export function Hero() {
+  const [colorParam, setColorParam] = useSearchParam('color');
+  const selectedColor = resolveColor(colorParam);
+
   return (
     <section
       aria-labelledby="product-name"
       className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12"
     >
-      <Gallery images={product.colors[0].images} />
+      <Gallery key={selectedColor.id} images={selectedColor.images} />
       <div className="flex flex-col gap-5">
         <p className="text-body-sm font-medium uppercase tracking-[0.18em] text-(--color-text-muted)">
           {product.tagline}
@@ -24,6 +38,12 @@ export function Hero() {
           {formatPrice(product.price, product.currency)}
         </p>
         <p className="text-body-lg text-(--color-text-secondary)">{product.description}</p>
+        <ColorSwatch
+          colors={product.colors}
+          selectedId={selectedColor.id}
+          onSelect={(id: ColorId) => setColorParam(id)}
+        />
+        <p className="text-body-sm text-(--color-text-muted)">One size — adjustable headband</p>
         <div className="mt-2">
           <Button variant="primary" size="lg">
             Add to cart
