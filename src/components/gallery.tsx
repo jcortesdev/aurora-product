@@ -1,5 +1,5 @@
 import type { GalleryImage } from '@/lib/product-data';
-import { useState } from 'react';
+import { type KeyboardEvent, useRef, useState } from 'react';
 
 type GalleryProps = {
   images: GalleryImage[];
@@ -7,6 +7,34 @@ type GalleryProps = {
 
 export function Gallery({ images }: GalleryProps) {
   const [active, setActive] = useState(0);
+  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  function moveTo(index: number) {
+    setActive(index);
+    thumbRefs.current[index]?.focus();
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const last = images.length - 1;
+    switch (event.key) {
+      case 'ArrowRight':
+        event.preventDefault();
+        moveTo(active === last ? 0 : active + 1);
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        moveTo(active === 0 ? last : active - 1);
+        break;
+      case 'Home':
+        event.preventDefault();
+        moveTo(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        moveTo(last);
+        break;
+    }
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -43,18 +71,27 @@ export function Gallery({ images }: GalleryProps) {
         })}
       </div>
 
-      <div role="toolbar" aria-label="Product images" className="grid grid-cols-4 gap-2">
+      <div
+        role="toolbar"
+        aria-label="Product images"
+        onKeyDown={handleKeyDown}
+        className="grid grid-cols-4 gap-2"
+      >
         {images.map((image, index) => {
           const isActive = index === active;
           return (
             <button
               // biome-ignore lint/suspicious/noArrayIndexKey: image order is stable
               key={index}
+              ref={(el) => {
+                thumbRefs.current[index] = el;
+              }}
               type="button"
+              tabIndex={isActive ? 0 : -1}
               aria-pressed={isActive}
               aria-label={`View ${image.alt}`}
               onClick={() => setActive(index)}
-              className="aspect-square overflow-hidden rounded-md bg-(--color-surface) ring-1 ring-(--color-border) transition-shadow hover:ring-(--color-text-muted) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-accent) focus-visible:ring-offset-2 focus-visible:ring-offset-(--color-background) aria-pressed:ring-2 aria-pressed:ring-(--color-accent)"
+              className="aspect-square overflow-hidden rounded-md bg-(--color-surface) ring-1 ring-(--color-border) transition-shadow hover:ring-(--color-text-muted) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-accent) focus-visible:ring-offset-2 focus-visible:ring-offset-(--color-background) aria-pressed:ring-2 aria-pressed:ring-(--color-accent) aria-pressed:ring-offset-2 aria-pressed:ring-offset-(--color-background)"
             >
               <img
                 src={image.picture.img.src}
