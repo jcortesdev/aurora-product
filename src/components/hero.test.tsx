@@ -30,4 +30,17 @@ describe('<Hero />', () => {
     render(<Hero />);
     expect(screen.getByRole('region', { name: product.name })).toBeInTheDocument();
   });
+
+  it('renders the hero image with descriptive alt text', () => {
+    render(<Hero />);
+    expect(screen.getByAltText(product.heroImageAlt)).toBeInTheDocument();
+  });
+
+  it('marks the hero image as high fetch priority for LCP', () => {
+    render(<Hero />);
+    const img = screen.getByAltText(product.heroImageAlt);
+    expect(img).toHaveAttribute('fetchpriority', 'high');
+    expect(img).toHaveAttribute('width');
+    expect(img).toHaveAttribute('height');
+  });
 });

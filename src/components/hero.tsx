@@ -8,10 +8,23 @@ export function Hero() {
       aria-labelledby="product-name"
       className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12"
     >
-      <div
-        aria-hidden="true"
-        className="aspect-[4/5] w-full rounded-lg bg-(--color-surface) ring-1 ring-(--color-border)"
-      />
+      <picture className="block overflow-hidden rounded-lg bg-(--color-surface) ring-1 ring-(--color-border)">
+        {product.heroImage.sources.avif && (
+          <source srcSet={product.heroImage.sources.avif} type="image/avif" />
+        )}
+        {product.heroImage.sources.webp && (
+          <source srcSet={product.heroImage.sources.webp} type="image/webp" />
+        )}
+        <img
+          src={product.heroImage.img.src}
+          width={product.heroImage.img.w}
+          height={product.heroImage.img.h}
+          alt={product.heroImageAlt}
+          fetchPriority="high"
+          decoding="async"
+          className="block h-auto w-full"
+        />
+      </picture>
       <div className="flex flex-col gap-5">
         <p className="text-body-sm font-medium uppercase tracking-[0.18em] text-(--color-text-muted)">
           {product.tagline}
