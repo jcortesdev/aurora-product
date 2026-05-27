@@ -1,32 +1,15 @@
 import { Button } from '@/components/button';
+import { Gallery } from '@/components/gallery';
 import { formatPrice } from '@/lib/format-price';
 import { product } from '@/lib/product-data';
 
 export function Hero() {
-  const lead = product.images[0];
-
   return (
     <section
       aria-labelledby="product-name"
       className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12"
     >
-      <picture className="block overflow-hidden rounded-lg bg-(--color-surface) ring-1 ring-(--color-border)">
-        {lead.picture.sources.avif && (
-          <source srcSet={lead.picture.sources.avif} type="image/avif" />
-        )}
-        {lead.picture.sources.webp && (
-          <source srcSet={lead.picture.sources.webp} type="image/webp" />
-        )}
-        <img
-          src={lead.picture.img.src}
-          width={lead.picture.img.w}
-          height={lead.picture.img.h}
-          alt={lead.alt}
-          fetchPriority="high"
-          decoding="async"
-          className="block h-auto w-full"
-        />
-      </picture>
+      <Gallery images={product.images} />
       <div className="flex flex-col gap-5">
         <p className="text-body-sm font-medium uppercase tracking-[0.18em] text-(--color-text-muted)">
           {product.tagline}
