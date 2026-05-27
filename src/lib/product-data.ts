@@ -1,5 +1,9 @@
 import auroraDetail from '@/assets/hero/aurora-one-detail.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
 import auroraFront from '@/assets/hero/aurora-one-front.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
+import auroraMdbDetail from '@/assets/hero/aurora-one-mdb-detail.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
+import auroraMdbFront from '@/assets/hero/aurora-one-mdb-front.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
+import auroraMdbSide from '@/assets/hero/aurora-one-mdb-side.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
+import auroraMdbHero from '@/assets/hero/aurora-one-mdb.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
 import auroraSide from '@/assets/hero/aurora-one-side.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
 import auroraHero from '@/assets/hero/aurora-one.jpg?w=400;800;1200;1600&format=avif;webp;jpg&as=picture';
 import type { SupportedCurrency } from '@/lib/format-price';
@@ -11,13 +15,26 @@ export type GalleryImage = {
   alt: string;
 };
 
+export type ColorId = 'mbk' | 'mdb' | 'ivy';
+
+export type ProductColor = {
+  id: ColorId;
+  name: string;
+  sku: string;
+  hex: string;
+  inStock: boolean;
+  // Empty array allowed for out-of-stock colors that ship without photography yet.
+  images: GalleryImage[];
+};
+
 export type Product = {
   name: string;
   tagline: string;
   price: number;
   currency: SupportedCurrency;
   description: string;
-  images: GalleryImage[];
+  colors: ProductColor[];
+  defaultColorId: ColorId;
 };
 
 export const product: Product = {
@@ -27,22 +44,65 @@ export const product: Product = {
   currency: 'USD',
   description:
     'Studio-grade 40mm drivers, adaptive noise cancellation, and 50-hour battery life. Machined aluminum cups, memory-foam earpads, and a connection that quietly follows you between devices.',
-  images: [
+  defaultColorId: 'mbk',
+  colors: [
     {
-      picture: auroraHero,
-      alt: 'Aurora One headphones in matte black, three-quarter view, brushed aluminum ear cups, floating against a dark gradient backdrop.',
+      id: 'mbk',
+      name: 'Matte Black',
+      sku: 'AUR-ONE-MBK',
+      hex: '#1a1a1a',
+      inStock: true,
+      images: [
+        {
+          picture: auroraHero,
+          alt: 'Aurora One headphones in matte black, three-quarter view, brushed aluminum ear cups, floating against a dark gradient backdrop.',
+        },
+        {
+          picture: auroraFront,
+          alt: 'Aurora One headphones in matte black, front-facing view with the headband arched upward and both earcups visible head-on.',
+        },
+        {
+          picture: auroraSide,
+          alt: 'Aurora One headphones in matte black, pure side profile showing the brushed aluminum trim ring around the earcup driver.',
+        },
+        {
+          picture: auroraDetail,
+          alt: 'Aurora One earcup in close-up, revealing the matte finish, brushed aluminum trim, and soft memory-foam edge.',
+        },
+      ],
     },
     {
-      picture: auroraFront,
-      alt: 'Aurora One headphones in matte black, front-facing view with the headband arched upward and both earcups visible head-on.',
+      id: 'mdb',
+      name: 'Midnight Blue',
+      sku: 'AUR-ONE-MDB',
+      hex: '#1e2a44',
+      inStock: true,
+      images: [
+        {
+          picture: auroraMdbHero,
+          alt: 'Aurora One headphones in midnight blue, three-quarter view, brushed aluminum ear cups, floating against a dark gradient backdrop.',
+        },
+        {
+          picture: auroraMdbFront,
+          alt: 'Aurora One headphones in midnight blue, front-facing view with the headband arched upward and both earcups visible head-on.',
+        },
+        {
+          picture: auroraMdbSide,
+          alt: 'Aurora One headphones in midnight blue, pure side profile showing the brushed aluminum trim ring around the earcup driver.',
+        },
+        {
+          picture: auroraMdbDetail,
+          alt: 'Aurora One earcup in close-up midnight blue, revealing the matte finish, brushed aluminum trim, and soft memory-foam edge.',
+        },
+      ],
     },
     {
-      picture: auroraSide,
-      alt: 'Aurora One headphones in matte black, pure side profile showing the brushed aluminum trim ring around the earcup driver.',
-    },
-    {
-      picture: auroraDetail,
-      alt: 'Aurora One earcup in close-up, revealing the matte finish, brushed aluminum trim, and soft memory-foam edge.',
+      id: 'ivy',
+      name: 'Ivory',
+      sku: 'AUR-ONE-IVY',
+      hex: '#f0e8d8',
+      inStock: false,
+      images: [],
     },
   ],
 };

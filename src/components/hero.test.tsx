@@ -33,12 +33,12 @@ describe('<Hero />', () => {
 
   it('renders the lead product image with descriptive alt text', () => {
     render(<Hero />);
-    expect(screen.getByAltText(product.images[0].alt)).toBeInTheDocument();
+    expect(screen.getByAltText(product.colors[0].images[0].alt)).toBeInTheDocument();
   });
 
   it('marks the lead image as high fetch priority for LCP', () => {
     render(<Hero />);
-    const img = screen.getByAltText(product.images[0].alt);
+    const img = screen.getByAltText(product.colors[0].images[0].alt);
     expect(img).toHaveAttribute('fetchpriority', 'high');
     expect(img).toHaveAttribute('width');
     expect(img).toHaveAttribute('height');
