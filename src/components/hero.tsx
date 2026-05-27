@@ -9,7 +9,7 @@ export function Hero() {
       aria-labelledby="product-name"
       className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12"
     >
-      <Gallery images={product.images} />
+      <Gallery images={product.colors[0].images} />
       <div className="flex flex-col gap-5">
         <p className="text-body-sm font-medium uppercase tracking-[0.18em] text-(--color-text-muted)">
           {product.tagline}
