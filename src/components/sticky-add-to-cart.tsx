@@ -61,7 +61,7 @@ export function StickyAddToCart({ target, onAddToCart }: StickyAddToCartProps) {
         entered ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 md:px-6">
+      <div className="mx-auto flex max-w-6xl items-center gap-3 px-(--spacing-page-x) py-3">
         {thumb && (
           <picture className="block h-12 w-12 shrink-0 overflow-hidden rounded-md bg-(--color-background) ring-1 ring-(--color-border)">
             {thumb.picture.sources.avif && (

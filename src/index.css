@@ -56,7 +56,7 @@
   /* Spacing — base values. Responsive overrides live below on :root,
      because Tailwind v4's @theme accepts only custom properties. */
   --spacing-page-x: 1.5rem;
-  --spacing-section-y: 4rem;
+  --spacing-section-y: 2.5rem;
 
   /* Radii */
   --radius-sm: 0.25rem;
@@ -94,7 +94,7 @@
 @media (width >= 768px) {
   :root {
     --spacing-page-x: 3rem;
-    --spacing-section-y: 6rem;
+    --spacing-section-y: 5rem;
   }
 }
 
