@@ -31,9 +31,9 @@ function ProductCard({ product }: { product: RelatedProduct }) {
       href={product.href}
       aria-disabled="true"
       onClick={(e) => e.preventDefault()}
-      className="group block cursor-default rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-accent) focus-visible:ring-offset-2 focus-visible:ring-offset-(--color-background)"
+      className="group block cursor-default rounded-lg transition-transform duration-200 ease-out hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-accent) focus-visible:ring-offset-2 focus-visible:ring-offset-(--color-background)"
     >
-      <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-(--color-surface) to-(--color-background) text-(--color-text-secondary) ring-1 ring-(--color-border)">
+      <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-(--color-surface) to-(--color-background) text-(--color-text-secondary) ring-1 ring-(--color-border) transition-shadow duration-200 ease-out group-hover:shadow-md motion-reduce:transition-none">
         <ProductIcon kind={product.icon} />
       </div>
       <div className="mt-3 flex flex-col gap-1">

@@ -80,7 +80,7 @@ export function ColorSwatch({ colors, selectedId, onSelect }: ColorSwatchProps) 
               role="radio"
               aria-checked={isSelected}
               aria-label={`${color.name}${color.inStock ? '' : ', out of stock'}`}
-              title={color.name}
+              title={color.inStock ? color.name : `${color.name} — out of stock`}
               disabled={!color.inStock}
               tabIndex={isSelected && color.inStock ? 0 : -1}
               onClick={() => {
