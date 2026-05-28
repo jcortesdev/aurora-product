@@ -2,13 +2,21 @@ import { Container } from '@/components/container';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { Hero } from '@/components/hero';
-import { RelatedProducts } from '@/components/related-products';
-import { Reviews } from '@/components/reviews';
+import { RelatedProductsSkeleton, ReviewsSkeleton } from '@/components/skeletons';
 import { StickyAddToCart } from '@/components/sticky-add-to-cart';
 import { type CartItem, addCartItem, removeCartItem } from '@/lib/cart';
 import type { ColorId } from '@/lib/product-data';
 import { useLocalStorage } from '@/lib/use-local-storage';
-import { useCallback, useState } from 'react';
+import { Suspense, lazy, useCallback, useState } from 'react';
+
+// React.lazy needs a default export. The project bans default exports, so each
+// lazy wrapper adapts the named export into the shape lazy() requires.
+const LazyReviews = lazy(() =>
+  import('@/components/reviews').then((m) => ({ default: m.Reviews }))
+);
+const LazyRelatedProducts = lazy(() =>
+  import('@/components/related-products').then((m) => ({ default: m.RelatedProducts }))
+);
 
 export default function App() {
   const [items, setItems] = useLocalStorage<CartItem[]>('aurora-cart', []);
@@ -31,10 +39,14 @@ export default function App() {
           <Hero ctaRef={setHeroCtaEl} onAddToCart={addToCart} />
         </Container>
         <Container className="pb-(--spacing-section-y)">
-          <Reviews />
+          <Suspense fallback={<ReviewsSkeleton />}>
+            <LazyReviews />
+          </Suspense>
         </Container>
         <Container>
-          <RelatedProducts />
+          <Suspense fallback={<RelatedProductsSkeleton />}>
+            <LazyRelatedProducts />
+          </Suspense>
         </Container>
       </main>
       <StickyAddToCart target={heroCtaEl} onAddToCart={addToCart} />

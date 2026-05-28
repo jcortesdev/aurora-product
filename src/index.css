@@ -72,6 +72,9 @@
 
   /* Animations. Re-keyed by React (key={count}) so the badge bumps on each add. */
   --animate-cart-bump: cart-bump 180ms ease-out;
+  /* Lazy boundary placeholders shimmer until the chunk lands. The skeleton
+     hides itself for prefers-reduced-motion via motion-reduce:animate-none. */
+  --animate-shimmer: shimmer 1.4s linear infinite;
 }
 
 @keyframes cart-bump {
@@ -86,6 +89,15 @@
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 

@@ -59,7 +59,6 @@ function ProductIcon({ kind }: { kind: RelatedProductIcon }) {
 }
 
 const iconProps = {
-  'aria-hidden': true,
   width: 64,
   height: 64,
   viewBox: '0 0 64 64',
@@ -72,7 +71,7 @@ const iconProps = {
 
 function EarbudIcon() {
   return (
-    <svg {...iconProps}>
+    <svg aria-hidden="true" {...iconProps}>
       <ellipse cx="22" cy="24" rx="9" ry="11" />
       <path d="M22 35 L22 46" />
       <circle cx="22" cy="50" r="4" />
@@ -85,7 +84,7 @@ function EarbudIcon() {
 
 function SpeakerIcon() {
   return (
-    <svg {...iconProps}>
+    <svg aria-hidden="true" {...iconProps}>
       <rect x="18" y="8" width="28" height="48" rx="4" />
       <circle cx="32" cy="22" r="5" />
       <circle cx="32" cy="42" r="8" />
@@ -95,7 +94,7 @@ function SpeakerIcon() {
 
 function OverEarIcon() {
   return (
-    <svg {...iconProps}>
+    <svg aria-hidden="true" {...iconProps}>
       <path d="M12 32 Q12 12 32 12 Q52 12 52 32" />
       <rect x="8" y="32" width="10" height="16" rx="3" />
       <rect x="46" y="32" width="10" height="16" rx="3" />
