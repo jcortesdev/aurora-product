@@ -7,7 +7,7 @@
 ![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Tailwind](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white)
 
-**Live demo:** [jcortes.dev/aurora-product](https://jcortes.dev/aurora-product)
+**Live demo:** [demo-aurora.jcortes.dev](https://demo-aurora.jcortes.dev)
 
 ---
 
@@ -140,6 +140,11 @@ This is a portfolio demo — at production scale I would:
 - Implement actual cart persistence (Zustand + localStorage, or a server cart with auth)
 - A/B test variant selector designs (swatch vs. dropdown)
 - Replace local images with a proper image CDN (Cloudinary, imgix) with `srcset` for art direction
+
+## Credits
+
+Sample reviews and related products are fictional, used solely to demonstrate
+the layout and below-the-fold sections.
 
 ## License
 
