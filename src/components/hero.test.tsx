@@ -1,6 +1,7 @@
 import { product } from '@/lib/product-data';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import { Hero } from './hero';
 
 describe('<Hero />', () => {
@@ -42,5 +43,21 @@ describe('<Hero />', () => {
     expect(img).toHaveAttribute('fetchpriority', 'high');
     expect(img).toHaveAttribute('width');
     expect(img).toHaveAttribute('height');
+  });
+
+  it('calls onAddToCart when the Add to cart button is clicked', async () => {
+    const user = userEvent.setup();
+    const onAddToCart = vi.fn();
+    render(<Hero onAddToCart={onAddToCart} />);
+    await user.click(screen.getByRole('button', { name: /add to cart/i }));
+    expect(onAddToCart).toHaveBeenCalledOnce();
+  });
+
+  it('passes the CTA wrapper element to ctaRef so the sticky bar can observe it', () => {
+    const ctaRef = vi.fn();
+    render(<Hero ctaRef={ctaRef} />);
+    expect(ctaRef).toHaveBeenCalled();
+    const lastArg = ctaRef.mock.calls.at(-1)?.[0];
+    expect(lastArg).toBeInstanceOf(HTMLElement);
   });
 });
