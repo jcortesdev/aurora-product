@@ -25,31 +25,32 @@ Vite gives me a faster dev loop, a smaller production bundle, and full control o
 
 ## Features
 
-- 🖼️ **Image gallery** with thumbnail navigation, smooth crossfade transitions, and hover-to-zoom
-- 🎨 **Variant selector** (color + size) with animated swatch indicator and out-of-stock states
-- 📌 **Sticky Add to Cart** that activates on scroll past the fold
+- 🖼️ **Image gallery** with thumbnail navigation, crossfade transitions, and roving-tabindex keyboard support
+- 🎨 **Color variant selector** with animated swatch indicator and an out-of-stock state
+- 📌 **Sticky Add to Cart** that activates when the hero CTA scrolls out of view
+- 🛒 **Cart popover** with remove and clear actions, persisted in `localStorage` across reloads
 - ⌨️ **Full keyboard navigation** with visible focus rings
-- ♿ **WCAG 2.1 AA compliant** — tested with axe and screen readers
-- ⚡ **Perfect Lighthouse score** (100/100/100/100)
-- 🌙 **Dark mode** with system preference detection
-- 📱 **Responsive** from 320px to 4K
-- 🎭 **Scroll-driven animations** using the native CSS Scroll-Driven Animations API (with JS fallback)
+- ♿ **WCAG 2.1 AA** — `axe-core` runs against the rendered page in CI, currently 0 violations
+- 🌙 **Dark mode** with system preference fallback and a manual toggle, anti-FOUC inline script
+- 📱 **Responsive** from 320px upward
+- 🧩 **Code-split below-the-fold sections** via `React.lazy` + `Suspense` with shimmer skeletons
 
 ## Tech Stack
 
 | Layer | Choice | Why |
 |-------|--------|-----|
-| Build tool | **Vite 6** | Fast dev, native ESM, tiny output for a static SPA |
+| Build tool | **Vite 8** | Fast dev, native ESM, tiny output for a static SPA |
 | UI library | **React 19** | Component model, ecosystem, my daily driver |
 | Language | **TypeScript** (strict mode) | Type safety, refactor confidence |
-| Styling | **Tailwind CSS v4** | Velocity without leaving HTML |
-| Animation | **Framer Motion** + native CSS | Motion for orchestration, CSS for performance |
-| Icons | **Lucide React** | Tree-shakable, no icon font bloat |
-| Image optimization | **vite-imagetools** + manual AVIF/WebP | Built-in `srcset` generation at build time |
-| Testing | **Vitest** + **Playwright** | Unit + E2E coverage |
-| Linting | **ESLint** + **Prettier** + **Biome** | Fast feedback loop |
-| CI | **GitHub Actions** | Lint, typecheck, test, Lighthouse CI on every PR |
-| Hosting | **Vercel** | Edge network, HTTP/2, automatic HTTPS — works perfectly with Vite |
+| Styling | **Tailwind CSS v4** | Native CSS variables, no PostCSS config |
+| Animation | **Native CSS** only | Keyframes + transitions, no animation library in the bundle |
+| Icons | **Inline SVG** | No icon-library payload, accessible by default with `aria-hidden` |
+| Image optimization | **vite-imagetools** (AVIF/WebP/JPEG) | Build-time `srcset` for the gallery |
+| State | **`useState` + URL search params + `useLocalStorage`** | No router, no global store |
+| Testing | **Vitest** + **Playwright** + **`@axe-core/playwright`** | Unit + E2E + a11y |
+| Linting | **Biome** | Replaces ESLint + Prettier in one tool |
+| CI | **GitHub Actions** | Lint + typecheck on every push |
+| Hosting | **Vercel** | Static deploy, edge CDN |
 
 See [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for the deeper rationale.
 
@@ -68,32 +69,36 @@ Other scripts:
 pnpm build        # production build (output in dist/)
 pnpm preview      # preview production build locally
 pnpm test         # unit tests (Vitest)
-pnpm test:e2e     # end-to-end tests (Playwright)
-pnpm lint         # ESLint + Biome
-pnpm typecheck    # tsc --noEmit
-pnpm lhci         # local Lighthouse CI run
+pnpm test:e2e     # end-to-end tests (Playwright + axe)
+pnpm check        # Biome (lint + format)
 ```
 
 ## Project structure
 
 ```
 src/
-├── main.tsx                # entry point (Vite)
-├── App.tsx                 # root component (the product page)
-├── index.css               # Tailwind + design tokens
-├── components/
-│   ├── gallery/            # image gallery + zoom
-│   ├── variants/           # color/size selectors
-│   ├── cart/               # add-to-cart + sticky bar
-│   └── ui/                 # primitives (Button, etc.)
-├── lib/
-│   ├── product-data.ts     # mock product (in a real app: CMS / API)
-│   └── analytics.ts        # event tracking abstraction
-└── hooks/
-    └── use-*.ts            # custom hooks
-
-public/
-└── images/                 # static product images (with srcset variants)
+├── main.tsx                # entry point
+├── App.tsx                 # root composition, owns cart state
+├── index.css               # Tailwind v4 import + design tokens + keyframes
+├── components/             # flat list of components, co-located tests
+│   ├── hero.tsx
+│   ├── gallery.tsx
+│   ├── color-swatch.tsx
+│   ├── header.tsx
+│   ├── cart-popover.tsx
+│   ├── sticky-add-to-cart.tsx
+│   ├── reviews.tsx         # lazy chunk
+│   ├── related-products.tsx# lazy chunk
+│   └── ...                 # button, container, footer, skeletons, theme-toggle
+└── lib/
+    ├── product-data.ts     # mock product + variants
+    ├── reviews-data.ts     # mock reviews
+    ├── related-products-data.ts
+    ├── cart.ts             # CartItem type + pure helpers
+    ├── format-price.ts
+    ├── use-search-param.ts # URL ↔ React state
+    ├── use-local-storage.ts# persisted React state
+    └── theme.ts            # light/dark helpers
 ```
 
 ## Architecture decisions
@@ -108,38 +113,38 @@ Key trade-offs documented in [`docs/DECISIONS.md`](./docs/DECISIONS.md) as light
 6. Why URL search params for variant selection
 7. Why no barrel files
 
-## Performance budget
+## Performance
 
-This project enforces a hard performance budget in CI. PRs that exceed any of these fail the build:
+Latest local Lighthouse run (production build, desktop preset):
 
-| Metric | Budget |
-|--------|--------|
-| LCP | < 1.2s |
-| INP | < 100ms |
-| CLS | < 0.05 |
-| JS bundle (initial) | < 60kb gzipped |
-| Total page weight | < 400kb |
+| Performance | Accessibility | Best Practices | SEO |
+|---|---|---|---|
+| **91** | **100** | **100** | **100** |
 
-The initial JS budget is **tighter than Next.js equivalents** because Vite's output for a static SPA is smaller — no framework runtime, no router runtime, no hydration scaffolding beyond what React itself needs.
+Highlights and gaps:
+
+- **CLS 0** — `font-display: optional` + explicit `width`/`height` on every image keep layout shifts at zero.
+- **TBT 0 ms, Speed Index 1.3 s** — initial JS is small and there's no animation library in the bundle.
+- **LCP ~3.8 s** is the open item. The hero image is the LCP element; the `<link rel="preload">` shipped in `index.html` was removed because its URL didn't match what the `<picture>` `srcset` actually selects (the assets get hashed at build time). The honest fix is a small Vite plugin that injects the right hashed URL into the preload — deliberately deferred.
+- **Initial JS bundle**: 67.13 kB gzipped (React + app code). Reviews and Related Products are code-split into separate chunks (~1.5 kB gz each) that load on scroll.
 
 ## Accessibility
 
-- Tested with **axe DevTools** (zero violations)
-- Manual keyboard navigation pass on every release
-- Screen reader tested with VoiceOver (macOS) and NVDA (Windows)
-- All interactive elements meet WCAG 2.1 AA contrast ratios
-- Respects `prefers-reduced-motion`
+- `@axe-core/playwright` runs against the full page (including the sticky cart and lazy-loaded sections) in E2E — currently **0 violations**.
+- Visible `focus-visible` rings on every interactive element, roving tabindex on the gallery and color swatches.
+- Live region on the cart so screen readers announce count changes.
+- Respects `prefers-reduced-motion` (all transitions and the skeleton shimmer disable under it).
+- Manual screen-reader testing is not part of this project's verification yet.
 
 ## What I'd do differently in production
 
-This is a portfolio demo — at production scale I would:
+This is a portfolio demo. At production scale I would:
 
-- **Reach for Next.js** as soon as I added a second route, server-side data fetching, or SEO-critical structured content beyond a single page. The tool I choose changes when the problem changes.
-- Move product data behind a CMS (Sanity, Contentful)
-- Add Sentry for error monitoring and Web Vitals reporting
-- Implement actual cart persistence (Zustand + localStorage, or a server cart with auth)
-- A/B test variant selector designs (swatch vs. dropdown)
-- Replace local images with a proper image CDN (Cloudinary, imgix) with `srcset` for art direction
+- **Reach for Next.js** as soon as a second route, server-side data fetching, or SEO-critical SSR became real requirements.
+- Move product data behind a CMS (Sanity, Contentful).
+- Replace the mock cart with a real one — server-backed with auth, not just `localStorage`.
+- Add error monitoring (Sentry) and Web Vitals reporting.
+- Replace local images with a proper image CDN (Cloudinary, imgix) and inject the LCP preload URL at build time.
 
 ## Credits
 
