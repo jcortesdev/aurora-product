@@ -129,9 +129,7 @@ describe('<StickyAddToCart />', () => {
   });
 
   it('disconnects the observer on unmount', () => {
-    const { unmount } = render(
-      <StickyAddToCart target={makeTarget()} onAddToCart={() => {}} />,
-    );
+    const { unmount } = render(<StickyAddToCart target={makeTarget()} onAddToCart={() => {}} />);
     unmount();
     expect(disconnectSpy).toHaveBeenCalled();
   });

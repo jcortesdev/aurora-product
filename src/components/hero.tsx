@@ -15,13 +15,14 @@ function resolveColor(paramValue: string | null) {
 }
 
 type HeroProps = {
-  onAddToCart?: () => void;
+  onAddToCart?: (colorId: ColorId) => void;
   ctaRef?: (el: HTMLElement | null) => void;
 };
 
 export function Hero({ onAddToCart, ctaRef }: HeroProps = {}) {
   const [colorParam, setColorParam] = useSearchParam('color');
   const selectedColor = resolveColor(colorParam);
+  const handleAdd = () => onAddToCart?.(selectedColor.id);
 
   return (
     <section
@@ -50,7 +51,7 @@ export function Hero({ onAddToCart, ctaRef }: HeroProps = {}) {
         />
         <p className="text-body-sm text-(--color-text-muted)">One size — adjustable headband</p>
         <div className="mt-2" ref={ctaRef}>
-          <Button variant="primary" size="lg" onClick={onAddToCart}>
+          <Button variant="primary" size="lg" onClick={handleAdd}>
             Add to cart
           </Button>
         </div>

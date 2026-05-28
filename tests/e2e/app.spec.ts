@@ -35,7 +35,7 @@ test('sticky add-to-cart appears when hero CTA scrolls out of view, with no a11y
       new Promise<void>((resolve) => {
         if (Number.parseFloat(getComputedStyle(el).opacity) >= 1) return resolve();
         el.addEventListener('transitionend', () => resolve(), { once: true });
-      }),
+      })
   );
 
   const results = await new AxeBuilder({ page }).analyze();

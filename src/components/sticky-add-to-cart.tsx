@@ -1,12 +1,12 @@
 import { Button } from '@/components/button';
 import { formatPrice } from '@/lib/format-price';
-import { product } from '@/lib/product-data';
+import { type ColorId, product } from '@/lib/product-data';
 import { useSearchParam } from '@/lib/use-search-param';
 import { useEffect, useState } from 'react';
 
 type StickyAddToCartProps = {
   target: HTMLElement | null;
-  onAddToCart: () => void;
+  onAddToCart: (colorId: ColorId) => void;
 };
 
 function resolveColor(paramValue: string | null) {
@@ -32,7 +32,7 @@ export function StickyAddToCart({ target, onAddToCart }: StickyAddToCartProps) {
       ([entry]) => {
         setStuck(!entry.isIntersecting);
       },
-      { threshold: 0 },
+      { threshold: 0 }
     );
     observer.observe(target);
     return () => observer.disconnect();
@@ -58,9 +58,7 @@ export function StickyAddToCart({ target, onAddToCart }: StickyAddToCartProps) {
     <aside
       aria-label="Sticky add to cart"
       className={`fixed inset-x-0 bottom-0 z-40 border-t border-(--color-border) bg-(--color-surface) shadow-lg transition-[transform,opacity] duration-250 ease-out motion-reduce:transition-none ${
-        entered
-          ? 'translate-y-0 opacity-100'
-          : 'pointer-events-none translate-y-full opacity-0'
+        entered ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 md:px-6">
@@ -94,7 +92,12 @@ export function StickyAddToCart({ target, onAddToCart }: StickyAddToCartProps) {
         <p className="shrink-0 text-body-sm font-semibold text-(--color-text-primary) sm:text-body">
           {formatPrice(product.price, product.currency)}
         </p>
-        <Button variant="primary" size="md" onClick={onAddToCart} className="shrink-0">
+        <Button
+          variant="primary"
+          size="md"
+          onClick={() => onAddToCart(selectedColor.id)}
+          className="shrink-0"
+        >
           Add to cart
         </Button>
       </div>
