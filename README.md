@@ -106,12 +106,13 @@ src/
 Key trade-offs documented in [`docs/DECISIONS.md`](./docs/DECISIONS.md) as lightweight ADRs:
 
 1. Why Vite over Next.js for this specific project
-2. Why Framer Motion *and* native CSS animations
+2. Why CSS-only animations (and Framer Motion deferred)
 3. Why no global state library
 4. Why Tailwind v4 over CSS Modules
 5. Why pnpm over npm
 6. Why URL search params for variant selection
 7. Why no barrel files
+8. Why `vite-imagetools` for image optimization
 
 ## Performance
 

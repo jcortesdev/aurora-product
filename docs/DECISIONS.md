@@ -35,21 +35,28 @@ Lightweight records of architectural decisions. Each one is short on purpose: co
 
 ---
 
-## ADR-002: Framer Motion AND native CSS animations
+## ADR-002: CSS-only animations (Framer Motion deferred)
 
-**Context:** Animation libraries are heavy. Pure CSS is fast but limited. We need to know when to use which.
+**Context:** Animation libraries are heavy. The original plan was a hybrid — CSS for declarative work, Framer Motion (~30kb gz) lazily loaded for orchestration (layout animations, `AnimatePresence`, gesture-driven motion). Worth confirming whether we actually need both.
 
-**Decision:**
+**Decision:** Native CSS only. No Framer Motion dependency installed.
 
-- **CSS** for everything declarative: hover effects, fade-ins, transitions on state classes, scroll-driven decorative animations.
-- **Framer Motion** for orchestration: layout animations, gesture-driven motion, coordinated multi-element sequences, `AnimatePresence` for exit animations.
-- Framer Motion is loaded lazily, only by the components that need it.
+Every animation case in the project so far has been solvable declaratively with `transition`, `@keyframes`, and Tailwind utilities:
+
+- Gallery crossfade — `opacity` transition between stacked `<picture>` elements.
+- Color swatch active ring — CSS scale + ring transition.
+- Cart badge bump on add — `@keyframes cart-bump` re-fired via `key={cartCount}`.
+- Sticky add-to-cart entry — translate-y + opacity transition gated by `requestAnimationFrame`.
+- Skeleton shimmer for lazy boundaries — `@keyframes shimmer` background-position sweep.
+
+The hybrid strategy is still the right answer when the project needs real orchestration — `AnimatePresence` for exit animations, layout animations, complex gesture handling. That moment has not arrived in this codebase.
 
 **Consequences:**
 
-- ✅ The CSS-only animations run on the compositor and never block the main thread.
-- ✅ Framer Motion stays out of the initial bundle.
-- ⚠️ Two animation systems in one codebase. We mitigate this with clear comments on _why_ each one is chosen.
+- ✅ Zero bytes spent on an animation library in the initial bundle.
+- ✅ All animations run on the compositor thread (transform / opacity only), so they never block the main thread.
+- ✅ `prefers-reduced-motion` handling is uniform — one `motion-reduce:` utility per animation.
+- ⚠️ When we eventually need `AnimatePresence` for an exit animation (the sticky bar would benefit, see ADR-discussion notes), we revisit and lazy-load Framer Motion at that moment.
 
 ---
 
