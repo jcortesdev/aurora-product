@@ -66,6 +66,26 @@ describe('useSearchParam', () => {
     expect(window.location.search).toBe('?utm=foo');
   });
 
+  it('syncs across sibling instances with the same key', () => {
+    const { result: hero } = renderHook(() => useSearchParam('color'));
+    const { result: sticky } = renderHook(() => useSearchParam('color'));
+
+    act(() => hero.current[1]('mdb'));
+
+    expect(hero.current[0]).toBe('mdb');
+    expect(sticky.current[0]).toBe('mdb');
+  });
+
+  it('does not cross-fire between instances with different keys', () => {
+    const { result: color } = renderHook(() => useSearchParam('color'));
+    const { result: size } = renderHook(() => useSearchParam('size'));
+
+    act(() => color.current[1]('mdb'));
+
+    expect(color.current[0]).toBe('mdb');
+    expect(size.current[0]).toBeNull();
+  });
+
   it('does not grow the history stack across updates', () => {
     const startLength = window.history.length;
     const { result } = renderHook(() => useSearchParam('color'));
