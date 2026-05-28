@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://demo-aurora.jcortes.dev/sitemap.xml
