@@ -47,8 +47,9 @@ function Stars({ value }: { value: number }) {
   const filled = Math.round(value);
   return (
     <span
-      className="inline-flex items-center gap-0.5 align-middle text-(--color-accent)"
+      role="img"
       aria-label={`${value} out of 5 stars`}
+      className="inline-flex items-center gap-0.5 align-middle text-(--color-accent)"
     >
       {[0, 1, 2, 3, 4].map((i) => (
         <Star key={i} filled={i < filled} />
